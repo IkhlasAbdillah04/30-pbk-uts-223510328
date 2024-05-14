@@ -1,114 +1,62 @@
 <template>
   <div id="app">
-    <h1>Task Manager</h1>
-    <AddTask @addTask="addTask" />
-    <FilterTask @filterTasks="setFilter" />
-    <TaskList
-      :tasks="tasks"
-      :filterCompleted="filterCompleted"
-      @cancelTask="cancelTask"
-      @completeTask="completeTask"
-    />
+    <header>
+      <button @click="currentView = 'PostComponent'">Posts</button>
+      <button @click="currentView = 'TodosComponent'">Todos</button>
+    </header>
+    <component :is="currentView"></component>
   </div>
 </template>
 
 <script>
-import AddTask from './components/AddTask.vue'
-import FilterTask from './components/FilterTask.vue'
-import TaskList from './components/TaskList.vue'
+import PostComponent from './components/PostComponent.vue'
+import TodosComponent from './components/TodosComponent.vue'
 
 export default {
   name: 'App',
   components: {
-    AddTask,
-    FilterTask,
-    TaskList
+    PostComponent,
+    TodosComponent
   },
   data() {
     return {
-      tasks: [],
-      filterCompleted: false
-    }
-  },
-  methods: {
-    addTask(taskName) {
-      const newTask = {
-        name: taskName,
-        completed: false
-      }
-      this.tasks.push(newTask)
-    },
-    cancelTask(task) {
-      this.tasks = this.tasks.filter((t) => t !== task)
-    },
-    completeTask(task) {
-      task.completed = true
-    },
-    setFilter(filterValue) {
-      this.filterCompleted = filterValue
+      currentView: 'PostComponent'
     }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  margin-top: 20px;
+header {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-h1 {
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.task-item {
-  margin-bottom: 10px;
+  padding: 10px 0;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 300px;
 }
 
-.task-item button {
-  background-color: #dc3545;
-  color: #fff;
+body{
+  background-color: #192633;
+
+}
+
+button {
+  margin: 0 10px;
+  padding: 10px 20px;
   border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: 4px;
+  background-color: #000000;
+  color: white;
+  font-size: 16px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.task-item button:hover {
-  background-color: #c82333;
+button:hover {
+  background-color: #000000;
 }
 
-.add-task {
-  margin-bottom: 20px;
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
 }
-
-.add-task button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.add-task button:hover {
-  background-color: #0056b3;
-}
-
-.filter-task {
-  margin-top: -10px;
-  margin-bottom: 10px;
-}
-
 </style>
