@@ -1,8 +1,18 @@
 <template>
   <div id="app">
     <header>
-      <button @click="currentView = 'PostComponent'">Posts</button>
-      <button @click="currentView = 'TodosComponent'">Todos</button>
+      <button
+        :class="{ active: currentView === 'PostComponent' }"
+        @click="currentView = 'PostComponent'"
+      >
+        Posts
+      </button>
+      <button
+        :class="{ active: currentView === 'TodosComponent' }"
+        @click="currentView = 'TodosComponent'"
+      >
+        Todos
+      </button>
     </header>
     <component :is="currentView"></component>
   </div>
@@ -27,16 +37,14 @@ export default {
 </script>
 
 <style>
+body {
+  background-color: #2c3e50;
+}
+
 header {
   display: flex;
   justify-content: center;
   padding: 10px 0;
-  display: flex;
-}
-
-body{
-  background-color: #192633;
-
 }
 
 button {
@@ -52,11 +60,15 @@ button {
 }
 
 button:hover {
-  background-color: #000000;
+  background-color: #333333;
 }
 
 button:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+button.active {
+  background-color: #007bff; /* Green background for active button */
 }
 </style>

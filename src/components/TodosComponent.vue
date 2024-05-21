@@ -3,34 +3,39 @@
     <h1>Task Manager</h1>
     <!-- Add Task Section -->
     <div class="add-task">
-      <input v-model="newTaskName" placeholder="Add a new task..." />
+      <input type="text" v-model="newTaskName" placeholder="Add New Task..." class="task-input" />
       <button @click="addTask">Add Task</button>
     </div>
-    <!-- Filter Task Section -->
-    <div class="filter-task">
-      <label>
-        <input type="checkbox" :checked="filterCompleted" @change="filterTasks" />
-        Show only incomplete tasks
-      </label>
-    </div>
     <!-- Task List Section -->
-    <div class="task-list">
+    <div class="task-list" v-if="tasks.length > 0">
       <div v-for="(task, index) in filteredTasks" :key="index" class="task-item">
         <input type="checkbox" :checked="task.completed" @change="() => completeTask(task)" />
         <span :class="{ completed: task.completed }">{{ task.name }}</span>
         <button @click="cancelTask(task)">Delete</button>
       </div>
     </div>
+    <slot-component v-else>
+      <template v-slot:header>
+        <h3>No Tasks</h3>
+      </template>
+      <template v-slot:content>
+        <p>Click 'Add Task' to start adding tasks.</p>
+      </template>
+    </slot-component>
   </div>
 </template>
 
 <script>
+import SlotComponent from './SlotComponent.vue'
+
 export default {
   name: 'TodosComponent',
+  components: {
+    SlotComponent
+  },
   data() {
     return {
       tasks: [],
-      filterCompleted: false,
       newTaskName: ''
     }
   },
@@ -50,14 +55,11 @@ export default {
     },
     completeTask(task) {
       task.completed = !task.completed
-    },
-    filterTasks() {
-      this.filterCompleted = !this.filterCompleted
     }
   },
   computed: {
     filteredTasks() {
-      return this.filterCompleted ? this.tasks.filter((task) => !task.completed) : this.tasks
+      return this.tasks
     }
   }
 }
@@ -68,8 +70,8 @@ export default {
   font-family: Arial, sans-serif;
   text-align: center;
   padding: 20px;
-  background-color: #2c3e50;
-  border-radius: 8px;
+  background-color: #ffffff;
+  border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -77,11 +79,25 @@ export default {
   align-items: center;
   width: 100%;
   max-width: 600px;
-  margin: 1.5rem auto; 
+  margin: 1.5rem auto;
 }
 
 h1 {
-  color: #ffffff; 
+  color: #000000;
+}
+
+.task-input {
+  width: 50%;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  transition: border-color 0.3s;
+}
+
+.task-input:focus {
+  border-color: #007bff;
+  outline: none;
 }
 
 .task-item {
@@ -106,7 +122,7 @@ h1 {
   color: #fff;
   border: none;
   padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
@@ -118,8 +134,8 @@ h1 {
   background-color: #007bff;
   color: #fff;
   border: none;
-  padding: 3px 15px;
-  border-radius: 5px;
+  padding: 10px 15px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
@@ -130,5 +146,4 @@ h1 {
 .filter-task {
   margin-top: 20px;
 }
-
 </style>

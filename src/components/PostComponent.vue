@@ -1,55 +1,53 @@
 <template>
   <div>
     <select v-model="selectedUser" @change="fetchPosts">
+      <option disabled value="">Please select a user</option>
       <option v-for="user in users" :key="user.id" :value="user.id">
         {{ user.name }}
       </option>
     </select>
-    <ul>
-      <li v-for="post in posts" :key="post.id">
-        <template v-if="post.editing">
-          <div class="post-content">
-            <input v-model="post.title" @keyup.enter="savePost(post)" />
-          </div>
-          <div class="button-group">
-            <button @click="savePost(post)">Save</button>
-            <button @click="cancelEdit(post)">Cancel</button>
-          </div>
-        </template>
-        <template v-else>
-          <div class="post-content">{{ post.title }}</div>
-          <div class="button-group">
-            <button @click="editPost(post)">Edit</button>
-            <button @click="deletePost(post.id)">Delete</button>
-          </div>
-        </template>
-      </li>
-    </ul>
+    <table v-if="selectedUser">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ selectedUserInfo.name }}</td>
+          <td>{{ selectedUserInfo.email }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
-
 <script>
-import axios from 'axios'
-
 export default {
   name: 'PostComponent',
   data() {
     return {
       users: [],
       posts: [],
-      selectedUser: null
+      selectedUser: null,
+      selectedUserInfo: {}
     }
   },
   created() {
     this.fetchUsers()
   },
+  watch: {
+    selectedUser(newVal) {
+      this.selectedUserInfo = this.users.find((user) => user.id === newVal) || {}
+    }
+  },
   methods: {
     fetchUsers() {
-      axios
-        .get('https://jsonplaceholder.typicode.com/users')
-        .then((response) => {
-          this.users = response.data
+      fetch('https://jsonplaceholder.typicode.com/users')
+        .then((response) => response.json())
+        .then((data) => {
+          this.users = data
         })
         .catch((error) => {
           console.error('There was an error fetching the users:', error)
@@ -57,36 +55,15 @@ export default {
     },
     fetchPosts() {
       if (this.selectedUser) {
-        axios
-          .get(`https://jsonplaceholder.typicode.com/posts?userId=${this.selectedUser}`)
-          .then((response) => {
-            this.posts = response.data.map(post => ({
-              ...post,
-              editing: false
-            }))
+        fetch(`https://jsonplaceholder.typicode.com/posts?userId=${this.selectedUser}`)
+          .then((response) => response.json())
+          .then((data) => {
+            this.posts = data
           })
           .catch((error) => {
             console.error('There was an error fetching the posts:', error)
           })
       }
-    },
-    editPost(post) {
-      this.posts = this.posts.map(p => {
-        if (p.id === post.id) {
-          return { ...p, editing: true }
-        }
-        return p
-      })
-    },
-    savePost(post) {
-      post.editing = false
-    },
-    cancelEdit(post) {
-      post.editing = false
-      this.fetchPosts()
-    },
-    deletePost(id) {
-      this.posts = this.posts.filter(post => post.id !== id)
     }
   }
 }
@@ -94,12 +71,13 @@ export default {
 
 <style scoped>
 div {
-  max-width: 600px;
+  max-width: 800px;
   margin: auto;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  background-color: #2c3e50;
+  border-radius: 10px;
+  background-color: #f8f8f8;
+  margin-top: 30px;
 }
 
 select {
@@ -107,41 +85,31 @@ select {
   padding: 10px;
   margin-bottom: 20px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 10px;
   background-color: white;
   font-size: 16px;
   color: #333;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
 }
 
-li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  flex-wrap: wrap;
+th,
+td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
 }
 
-li:last-child {
-  border-bottom: none;
+thead {
+  background-color: #2c3e50;
+  color: white;
 }
 
-li:hover {
+tbody tr:hover {
   background-color: #f0f0f0;
-}
-
-.post-content {
-  flex: 1; 
-  margin-right: 10px; 
-  word-wrap: break-word; 
-}
-
-.button-group {
-  white-space: nowrap;
 }
 </style>
