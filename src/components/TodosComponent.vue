@@ -89,7 +89,7 @@ export default {
   font-family: 'Arial', sans-serif;
   text-align: center;
   padding: 30px;
-  background-color: #ffffff; /* Menyelaraskan warna latar belakang dengan komponen lainnya */
+  background-color: #ffffff;
   border-radius: 20px; 
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); 
   display: flex;
