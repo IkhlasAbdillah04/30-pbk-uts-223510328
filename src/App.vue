@@ -36,6 +36,7 @@ header {
   padding: 15px 0; 
   background-color: #ffffff; 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  font-family: 'Arial', sans-serif;
 }
 
 a {

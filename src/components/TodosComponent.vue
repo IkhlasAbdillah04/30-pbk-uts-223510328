@@ -10,8 +10,13 @@
     <div class="task-list" v-if="tasks.length > 0">
       <div v-for="(task, index) in filteredTasks" :key="index" class="task-item">
         <input type="checkbox" :checked="task.completed" @change="() => completeTask(task)" />
-        <span :class="{ completed: task.completed }">{{ task.name }}</span>
-        <button @click="cancelTask(task)">Delete</button>
+        <span v-if="!task.editing" :class="{ completed: task.completed }">{{ task.name }}</span>
+        <input v-else type="text" v-model="task.name" @keyup.enter="saveTask(task)" @blur="cancelEdit(task)" class="edit-input" />
+        <div class="task-buttons">
+          <button v-if="!task.editing" @click="editTask(task)">Edit</button>
+          <button v-if="task.editing" @click="saveTask(task)">Save</button>
+          <button @click="deleteTask(task)">Delete</button>
+        </div>
       </div>
     </div>
     <slot-component v-else>
@@ -44,17 +49,31 @@ export default {
       if (this.newTaskName) {
         const newTask = {
           name: this.newTaskName,
-          completed: false
+          completed: false,
+          editing: false
         }
         this.tasks.push(newTask)
         this.newTaskName = ''
       }
     },
-    cancelTask(task) {
+    deleteTask(task) {
       this.tasks = this.tasks.filter((t) => t !== task)
     },
     completeTask(task) {
       task.completed = !task.completed
+    },
+    editTask(task) {
+      task.editing = true
+    },
+    saveTask(task) {
+      task.editing = false
+    },
+    cancelEdit(task) {
+      if (!task.name.trim()) {
+        this.deleteTask(task)
+      } else {
+        task.editing = false
+      }
     }
   },
   computed: {
@@ -70,7 +89,7 @@ export default {
   font-family: 'Arial', sans-serif;
   text-align: center;
   padding: 30px;
-  background-color: #ffffff; 
+  background-color: #ffffff; /* Menyelaraskan warna latar belakang dengan komponen lainnya */
   border-radius: 20px; 
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); 
   display: flex;
@@ -80,7 +99,8 @@ export default {
   width: 100%;
   max-width: 600px;
   margin: 2rem auto; 
-  transition: transform 0.3s, box-shadow 0.3s; 
+  transition: transform 0.3s, box-shadow 0.3s;
+  gap: 20px;
 }
 
 #task-manager-container:hover {
@@ -162,6 +182,25 @@ h1 {
 
 .task-item button:hover {
   background-color: #ff0000; 
+}
+
+.edit-input {
+  width: 60%;
+  padding: 8px 12px;
+  margin-bottom: 0;
+  border: 2px solid #ccc;
+  border-radius: 15px;
+  transition: border-color 0.3s;
+}
+
+.edit-input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.task-buttons {
+  display: flex;
+  gap: 10px;
 }
 
 .filter-task {
