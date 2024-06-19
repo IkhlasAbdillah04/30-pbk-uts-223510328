@@ -1,74 +1,67 @@
 <template>
   <div id="app">
     <header>
-      <button
-        :class="{ active: currentView === 'PostComponent' }"
-        @click="currentView = 'PostComponent'"
-      >
-        Posts
-      </button>
-      <button
-        :class="{ active: currentView === 'TodosComponent' }"
-        @click="currentView = 'TodosComponent'"
-      >
-        Todos
-      </button>
+      <router-link to="/posts" :class="{ active: currentRoute === 'PostComponent' }">Posts</router-link>
+      <router-link to="/todos" :class="{ active: currentRoute === 'TodosComponent' }">Todos</router-link>
+      <router-link to="/albums" :class="{ active: currentRoute === 'AlbumComponent' }">Albums</router-link>
     </header>
-    <component :is="currentView"></component>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import PostComponent from './components/PostComponent.vue'
-import TodosComponent from './components/TodosComponent.vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'App',
-  components: {
-    PostComponent,
-    TodosComponent
-  },
-  data() {
-    return {
-      currentView: 'PostComponent'
-    }
+  setup() {
+    const route = useRoute()
+    const currentRoute = computed(() => route.name)
+    return { currentRoute }
   }
 }
 </script>
 
-<style>
+<style scoped>
 body {
-  background-color: #2c3e50;
+  background-color: #f8f8f8; 
+  margin: 0;
+  font-family: 'Arial', sans-serif;
 }
 
 header {
   display: flex;
   justify-content: center;
-  padding: 10px 0;
+  padding: 15px 0; 
+  background-color: #ffffff; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
-button {
-  margin: 0 10px;
-  padding: 10px 20px;
+a {
+  margin: 0 15px; 
+  padding: 12px 25px; 
   border: none;
-  border-radius: 4px;
-  background-color: #000000;
+  border-radius: 20px; 
+  background-color: #007bff;
   color: white;
-  font-size: 16px;
+  font-size: 1rem; 
+  text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.3s; 
 }
 
-button:hover {
-  background-color: #333333;
+a:hover {
+  background-color: #0056b3; 
+  transform: translateY(-3px); 
 }
 
-button:focus {
+a:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); 
 }
 
-button.active {
-  background-color: #007bff; /* Green background for active button */
+a.active {
+  background-color: #000000; 
 }
 </style>

@@ -72,44 +72,60 @@ export default {
 <style scoped>
 div {
   max-width: 800px;
-  margin: auto;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  background-color: #f8f8f8;
-  margin-top: 30px;
+  margin: 40px auto; 
+  padding: 25px; 
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); 
+  border-radius: 15px; 
+  background-color: #ffffff; 
+  transition: transform 0.3s, box-shadow 0.3s; 
+}
+
+div:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15); 
 }
 
 select {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background-color: white;
-  font-size: 16px;
+  padding: 12px; 
+  margin-bottom: 25px; 
+  border: 2px solid #007bff; 
+  border-radius: 15px;
+  background-color: #f9f9f9; 
+  font-size: 1rem; 
   color: #333;
+  transition: border-color 0.3s;
+}
+
+select:focus {
+  border-color: #0056b3; 
+  outline: none;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 th,
 td {
-  padding: 12px;
+  padding: 15px; 
   text-align: left;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #ddd;
 }
 
 thead {
-  background-color: #2c3e50;
+  background-color: #007bff; 
   color: white;
 }
 
 tbody tr:hover {
-  background-color: #f0f0f0;
+  background-color: #f0f0f0; 
 }
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9; 
+}
+
 </style>
